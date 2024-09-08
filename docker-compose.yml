@@ -1,0 +1,26 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend # Construye la imagen del frontend usando el Dockerfile en ./frontend
+    ports:
+      - '3000:3000' # Expone el puerto 3000 (React por defecto)
+    volumes:
+      - ./frontend:/usr/src/app # Mapea el código del host (local) al contenedor
+      - /usr/src/app/node_modules # Evita que los módulos de Node.js sean sobrescritos por los del contenedor
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Fuerza a React a usar "polling" para detectar cambios en Docker
+    command: npm start # Usar react-scripts con hot-reloading
+    depends_on:
+      - backend # Asegura que el backend esté levantado antes que el frontend
+
+  backend:
+    build: ./backend # Construye la imagen del backend usando el Dockerfile en ./backend
+    ports:
+      - '3001:3001' # Expone el puerto 3001 (usado por el backend Express)
+    volumes:
+      - ./backend:/usr/src/app # Mapea el código del host (local) al contenedor
+      - /usr/src/app/node_modules # Evita que los módulos de Node.js sean sobrescritos por los del contenedor
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Forzar nodemon a detectar cambios
+      - OPENAI_API_KEY=${OPENAI_API_KEY} # Asegurarse de cargar la API Key
+    command: npm run dev # Usar nodemon para hot-reloading
