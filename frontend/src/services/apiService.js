@@ -1,17 +1,15 @@
-// frontend/src/services/apiService.js
-
 import axios from 'axios';
 
-const getGPTResponse = async (prompt) => {
+const sendPrompt = async (prompt) => {
   try {
-    const response = await axios.post('http://localhost:3001/api/gpt', {
+    const response = await axios.post('http://localhost:3001/gpt-process', {
       prompt,
     });
-    return response.data;
+    return response.data.code;
   } catch (error) {
-    console.error('Error al enviar el prompt:', error.message);
-    throw error;
+    console.error('Error sending prompt to backend:', error);
+    return 'Error: Could not get response';
   }
 };
 
-export default { getGPTResponse };
+export default { sendPrompt };

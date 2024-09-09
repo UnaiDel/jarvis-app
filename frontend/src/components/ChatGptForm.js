@@ -1,49 +1,51 @@
-// frontend/src/components/ChatGptForm.js
-
-import React, { useState } from 'react';
-import apiService from '../services/apiService'; // Llamada al servicio de la API
+import React, { useState, useEffect } from 'react';
+import apiService from '../services/apiService';
 
 const ChatGptForm = () => {
-  const [prompt, setPrompt] = useState('');
+  const [input, setInput] = useState('');
   const [response, setResponse] = useState('');
+  const [listening, setListening] = useState(false);
+  const recognition = new (window.SpeechRecognition ||
+    window.webkitSpeechRecognition)();
+
+  useEffect(() => {
+    recognition.onresult = (event) => {
+      const voiceInput = event.results[0][0].transcript;
+      setInput(voiceInput);
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+    };
+  }, []);
+
+  const handleVoiceCommand = () => {
+    if (!listening) {
+      recognition.start();
+      setListening(true);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponse('Procesando la solicitud...'); // Mensaje mientras se espera la respuesta
-
-    try {
-      // Llamar a la API del backend y obtener la respuesta de GPT
-      const gptResponse = await apiService.getGPTResponse(prompt);
-
-      // Si la respuesta es un objeto, convierte a cadena JSON
-      const formattedResponse =
-        typeof gptResponse === 'object'
-          ? JSON.stringify(gptResponse)
-          : gptResponse;
-
-      // Mostrar la respuesta en el frontend
-      setResponse(formattedResponse);
-    } catch (error) {
-      console.error('Error al enviar el prompt:', error.message);
-      setResponse('Hubo un error al obtener la respuesta.');
-    }
+    const result = await apiService.sendPrompt(input);
+    setResponse(result);
   };
 
   return (
     <div>
+      <button onClick={handleVoiceCommand}>
+        {listening ? 'Listening...' : 'Start Voice Command'}
+      </button>
       <form onSubmit={handleSubmit}>
-        <textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Escribe tu pregunta..."
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
-        <button type="submit">Enviar</button>
+        <button type="submit">Send</button>
       </form>
-
-      <div>
-        <h3>Respuesta de GPT:</h3>
-        <p>{response}</p>
-      </div>
+      <p>Response: {response}</p>
     </div>
   );
 };

@@ -1,17 +1,31 @@
-// backend/controllers/gptController.js
+const puppeteer = require('puppeteer');
+const axios = require('axios'); // <-- Asegúrate de incluir esto
 
-const gptService = require('../services/gptServices');
+const gptProcess = async (req, res) => {
+  const { prompt, type } = req.body;
+  let apiPrompt = prompt;
 
-// Controlador para obtener respuesta de GPT
-exports.getResponse = async (req, res) => {
-  const { prompt } = req.body;
+  if (type === 'fix') {
+    apiPrompt = `Fix the following code:\n${prompt}`;
+  } else if (type === 'generate') {
+    apiPrompt = `Generate code for the following task:\n${prompt}`;
+  }
+
   try {
-    // Utilizamos el servicio para obtener la respuesta de GPT
-    const response = await gptService.getGPTResponse(prompt);
+    const response = await axios.post(
+      'https://api.openai.com/v1/engines/davinci-codex/completions',
+      { prompt: apiPrompt, max_tokens: 150 },
+      { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } },
+    );
 
-    res.status(200).json({ message: response });
+    res.json({ code: response.data.choices[0].text });
   } catch (error) {
-    console.error(`[GPT Error]: ${error.message}`);
-    res.status(500).json({ error: 'Error al obtener respuesta de GPT' });
+    console.error(
+      'Error processing GPT request:',
+      error.response ? error.response.data : error.message,
+    );
+    res.status(500).send('Error generating code');
   }
 };
+
+module.exports = { gptProcess };

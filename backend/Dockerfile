@@ -1,16 +1,28 @@
-# Dockerfile del backend
 FROM node:18-alpine
 
 WORKDIR /usr/src/app
 
-# Establecer compatibilidad con OpenSSL
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
-# Copiar los archivos de dependencias
+# Instalar dependencias necesarias para Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    nodejs \
+    yarn
+
+# Definir variables de entorno necesarias para Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Copiar dependencias
 COPY package*.json ./
 
-# Instalar todas las dependencias, incluyendo nodemon
-RUN npm install --only=development
+RUN npm install
 
 # Copiar el resto del código
 COPY . .
@@ -18,5 +30,5 @@ COPY . .
 # Exponer el puerto
 EXPOSE 3001
 
-# Comando para iniciar la app en modo desarrollo
+# Comando para iniciar el backend
 CMD ["npm", "run", "dev"]
