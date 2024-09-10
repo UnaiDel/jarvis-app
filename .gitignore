@@ -63,6 +63,6 @@ desktop.ini
 
 # Environment variables file
 .env
-
+backend/firebase-adminsdk.json
 # Docker specific
 docker-compose.override.yml

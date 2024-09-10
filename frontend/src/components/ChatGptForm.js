@@ -1,52 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import apiService from '../services/apiService';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const ChatGptForm = () => {
-  const [input, setInput] = useState('');
-  const [response, setResponse] = useState('');
-  const [listening, setListening] = useState(false);
-  const recognition = new (window.SpeechRecognition ||
-    window.webkitSpeechRecognition)();
-
-  useEffect(() => {
-    recognition.onresult = (event) => {
-      const voiceInput = event.results[0][0].transcript;
-      setInput(voiceInput);
-    };
-
-    recognition.onend = () => {
-      setListening(false);
-    };
-  }, []);
-
-  const handleVoiceCommand = () => {
-    if (!listening) {
-      recognition.start();
-      setListening(true);
-    }
-  };
+  const [prompt, setPrompt] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await apiService.sendPrompt(input);
-    setResponse(result);
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/api/gpt-process',
+        {
+          prompt,
+          type: 'generate',
+          fileName: 'generatedFile.js',
+        },
+      );
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+      setPrompt('');
+    }
   };
 
   return (
-    <div>
-      <button onClick={handleVoiceCommand}>
-        {listening ? 'Listening...' : 'Start Voice Command'}
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder="Escribe un prompt..."
+      />
+      <button type="submit" disabled={loading}>
+        {loading ? 'Cargando...' : 'Enviar'}
       </button>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
-      <p>Response: {response}</p>
-    </div>
+    </form>
   );
 };
 

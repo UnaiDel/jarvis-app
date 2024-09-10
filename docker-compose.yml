@@ -2,7 +2,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - '3000:3000' # Los puertos deben estar entre comillas
+      - '3000:3000'
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
@@ -11,23 +11,26 @@ services:
     command: npm start
     depends_on:
       - backend
+    mem_limit: 1g # Limitar la memoria del frontend a 512 MB
 
   backend:
     build: ./backend
     ports:
-      - '3001:3001' # Los puertos también aquí entre comillas
+      - '3001:3001'
     volumes:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - CHOKIDAR_USEPOLLING=true
     env_file:
-      - ./.env
+      - .env
     command: npm run dev
     depends_on:
       - mongodb
+    mem_limit: 2g # Limitar la memoria del backend a 1 GB
 
   mongodb:
     image: mongo:latest
     ports:
-      - '27017:27017' # Igualmente, comillas en los puertos
+      - '27017:27017'

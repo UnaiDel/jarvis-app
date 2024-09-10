@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-function ResponseDisplay({ response }) {
+const ResponseDisplay = () => {
+  const [response, setResponse] = useState(null);
+
+  useEffect(() => {
+    // Aquí puedes traer la respuesta desde el backend si la quieres mostrar en tiempo real
+  }, []);
+
   return (
     <div>
-      <h2>Respuesta de GPT:</h2>
-      <p>{response}</p>
+      <h2>Respuesta del GPT:</h2>
+      {response ? <p>{response}</p> : <p>No hay respuesta disponible aún.</p>}
     </div>
   );
-}
+};
 
 export default ResponseDisplay;
