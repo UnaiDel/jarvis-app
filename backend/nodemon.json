@@ -1,5 +1,0 @@
-{
-  "watch": ["src", "controllers", "models", "services"],
-  "ignore": ["node_modules", "dist", "logs", "routes", "public"],
-  "ext": "js,json"
-}

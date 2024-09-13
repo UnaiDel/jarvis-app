@@ -1,18 +1,13 @@
-const express = require('express');
-const { processPrompt } = require('../controllers/gptController');
-const { authenticate } = require('../services/firebaseAuthService');
-const { searchInternet } = require('../controllers/puppeteerController');
-const { upload, handleVoiceInput } = require('../voice/voiceModule');
+// Ruta específica del archivo: backend/routes/api.js
 
+const express = require('express');
 const router = express.Router();
 
-// Ruta para procesar prompts GPT
-router.post('/gpt-process', authenticate, processPrompt);
+// Ruta de ejemplo
+router.get('/', (req, res) => {
+    res.send({ mensaje: 'Bienvenido a la API de JARVIS' });
+});
 
-// Ruta para procesar entradas de voz
-router.post('/voice-input', upload.single('audio'), handleVoiceInput);
-
-// Ruta para realizar búsquedas en internet
-router.post('/search-internet', authenticate, searchInternet);
+// Añade más rutas según las necesidades de tu proyecto aquí
 
 module.exports = router;
