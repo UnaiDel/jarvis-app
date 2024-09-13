@@ -1,15 +1,23 @@
-import React from 'react';
-import ChatGptForm from './components/ChatGptForm';
-import ResponseDisplay from './components/ResponseDisplay';
-import FirebaseAuth from './components/FirebaseAuth';
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <FirebaseAuth />
-      <h1>JARVIS Assistant</h1>
-      <ChatGptForm />
-      <ResponseDisplay />
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
     </div>
   );
 }

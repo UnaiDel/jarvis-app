@@ -1,9 +1,13 @@
-// Ruta específica del archivo: backend/index.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const admin = require('firebase-admin');
+
+// Inicialización de Firebase Admin utilizando variables de entorno
+admin.initializeApp({
+    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN_SDK))
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
