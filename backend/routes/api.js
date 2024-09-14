@@ -1,15 +1,13 @@
-const express = require('express');
+import express from 'express';
+import { generateChatResponse } from '../controllers/gptController.js';
+import { captureScreenshot } from '../controllers/puppeteerController.js';
+
 const router = express.Router();
-const verifyToken = require('../middleware/auth');  // Importa el middleware de autenticación
 
-// Ruta pública (sin autenticación)
-router.get('/', (req, res) => {
-    res.send({ mensaje: 'Bienvenido a la API de JARVIS' });
-});
+// GPT route
+router.post('/gpt/chat', generateChatResponse);
 
-// Ruta protegida (requiere autenticación)
-router.get('/protegido', verifyToken, (req, res) => {
-    res.send({ mensaje: `Hola, ${req.user.name}. Tienes acceso a esta ruta protegida.` });
-});
+// Puppeteer route
+router.post('/screenshot', captureScreenshot);
 
-module.exports = router;
+export default router;

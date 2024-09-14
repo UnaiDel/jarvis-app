@@ -1,37 +1,37 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
-const admin = require('firebase-admin');
-
-// Inicialización de Firebase Admin utilizando variables de entorno
-admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN_SDK))
-});
+import express from 'express';
+import helmet from 'helmet';
+import apiRoutes from './routes/api.js'; // Asegúrate de agregar ".js" en las rutas relativas
+import cors from 'cors';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
+// Middlewares
 app.use(express.json());
+app.use(helmet());
 
-// Conexión a MongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Conectado a MongoDB'))
-    .catch(err => console.error('Error al conectar con MongoDB:', err));
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (
+      ['http://localhost:3000', 'http://localhost:3001'].indexOf(origin) !== -1
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
 
-// Rutas
-const apiRoutes = require('./routes/api');
+app.use(cors(corsOptions));
+// Routes
 app.use('/api', apiRoutes);
 
-// Iniciar servidor
-app.listen(port, () => {
-    console.log(`Servidor corriendo en el puerto ${port}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
 });
 
-// Middleware de manejo de errores
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send({ mensaje: '¡Algo salió mal!' });
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

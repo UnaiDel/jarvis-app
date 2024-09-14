@@ -1,0 +1,14 @@
+/* Estilos de celebración */
+.celebration-mode {
+  background-color: #ffdf5d;
+  animation: confetti 0.8s ease-out forwards;
+}
+
+@keyframes confetti {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(100px) rotate(360deg);
+  }
+}

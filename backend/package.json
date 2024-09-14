@@ -1,26 +1,23 @@
 {
-  "name": "backend",
+  "name": "jarvis_backend",
   "version": "1.0.0",
+  "description": "Backend for JARVIS",
   "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "firebase-admin": "^12.5.0",
-    "mongoose": "^8.6.2"
+    "dotenv": "^10.0.0",
+    "express": "^5.0.0-beta.1",
+    "helmet": "^6.0.0",
+    "openai": "^3.3.0",
+    "puppeteer": "^10.0.0"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
-    "nodemon": "^3.1.4"
+    "mocha": "^10.7.3",
+    "supertest": "^7.0.0"
   }
 }
