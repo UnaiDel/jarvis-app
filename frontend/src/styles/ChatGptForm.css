@@ -1,0 +1,22 @@
+.chat-container {
+  margin-top: 30px;
+}
+
+.chat-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.chat-container .MuiTextField-root {
+  margin-bottom: 15px;
+}
+
+.chat-container .MuiButton-root {
+  margin-top: 10px;
+}
+
+.chat-container div {
+  margin-top: 20px;
+  font-style: italic;
+  color: #555;
+}

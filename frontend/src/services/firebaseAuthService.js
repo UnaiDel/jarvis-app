@@ -1,8 +1,7 @@
-// Importar lo necesario de Firebase
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import app from '../firebaseConfig'; // Importar la configuración de Firebase
+import app from '../firebaseConfig'; // Importa la instancia de Firebase correctamente
 
-const auth = getAuth(app); // Inicializar la autenticación con la app de Firebase
+const auth = getAuth(app); // Usa la instancia de la app para la autenticación
 
 // Función para iniciar sesión
 export const login = async (email, password) => {

@@ -1,0 +1,12 @@
+.auth-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.auth-container .MuiTextField-root {
+  margin-bottom: 15px;
+}
+
+.auth-container .MuiButton-root {
+  margin-top: 10px;
+}

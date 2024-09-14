@@ -1,40 +1,34 @@
 import React, { useState } from 'react';
-import { sendGptInput } from '../services/apiService';
-import './ChatGptForm.css'; // Asegúrate de importar los estilos
+import { Button, TextField } from '@mui/material';
+import { sendGptInput } from '../services/apiService'; // Named import
 
 const ChatGptForm = () => {
-  const [inputText, setInputText] = useState('');
-  const [responseText, setResponseText] = useState('');
-  const [error, setError] = useState(null);
-  const [isCelebration, setIsCelebration] = useState(false);
+  const [input, setInput] = useState('');
+  const [response, setResponse] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await sendGptInput(inputText);
-      setResponseText(response.message || 'No message found');
-
-      // Activar modo celebración
-      setIsCelebration(true);
-      setTimeout(() => setIsCelebration(false), 3000); // La celebración dura 3 segundos
-    } catch (err) {
-      setError('Failed to get GPT response');
-    }
+    const res = await sendGptInput(input); // Llamada correcta
+    setResponse(res);
   };
 
   return (
-    <div className={isCelebration ? 'celebration-mode' : ''}>
+    <div className="chat-container">
+      <h2>Consulta a GPT</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder="Enter your text"
+        <TextField
+          label="Escribe tu consulta"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
-        <button type="submit">Send</button>
+        <Button type="submit" variant="contained" color="primary">
+          Enviar
+        </Button>
       </form>
-      {responseText && <p>Response: {responseText}</p>}
-      {error && <p>Error: {error}</p>}
+      {response && <div>{response}</div>}
     </div>
   );
 };

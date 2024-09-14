@@ -1,55 +1,49 @@
-import React, { useState } from 'react';
-import { login, logout } from '../services/firebaseAuthService';
+import React from 'react';
+import { Button, TextField } from '@mui/material';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import '../styles/FirebaseAuth.css';
 
 const FirebaseAuth = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  const handleLogin = async () => {
-    try {
-      const userCredential = await login(email, password);
-      setUser(userCredential.user);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setUser(null);
-    } catch (err) {
-      setError(err.message);
-    }
+  const handleLogin = () => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log('Usuario autenticado', userCredential);
+      })
+      .catch((error) => {
+        console.error('Error en la autenticación', error);
+      });
   };
 
   return (
-    <div>
-      {user ? (
-        <>
-          <p>Welcome, {user.email}</p>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button onClick={handleLogin}>Login</button>
-          {error && <p>{error}</p>}
-        </>
-      )}
+    <div className="auth-container">
+      <h2>Iniciar Sesión</h2>
+      <TextField
+        label="Email"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="Contraseña"
+        type="password"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        onClick={handleLogin}
+      >
+        Iniciar Sesión
+      </Button>
     </div>
   );
 };

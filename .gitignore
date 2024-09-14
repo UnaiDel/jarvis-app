@@ -7,33 +7,20 @@ yarn-error.log*
 # Logs
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Firebase
 .firebase/
-firebase-debug.log*
 firebase-debug.*
 
 # Build
 dist/
 build/
 
-# Docker
-docker-compose.override.yml
-*.env
-.Dockerfile
-docker-compose.yml
-*.pid
-docker-compose.*
 
-# React
+# React and Static Files
 /node_modules
-/.pnp
+.pnp
 .pnp.js
-
-# Static Files
 public/static/
 
 # Firebase Authentication
@@ -50,7 +37,7 @@ coverage/
 
 # Environment variables
 .env
-*.env.*
+.env.*
 
 # Misc
 tmp/
